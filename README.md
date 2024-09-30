@@ -1,5 +1,7 @@
 # Rust Backend File Share with End-to-End Encryption
 
+[![Watch the video](https://img.youtube.com/vi/t5w2dauFmhM/maxresdefault.jpg)](https://youtu.be/t5w2dauFmhM)
+
 This project implements a file sharing backend using Rust, featuring end-to-end encryption to ensure the privacy and security of shared files.
 
 ## Table of Contents
