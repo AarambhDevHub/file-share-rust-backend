@@ -7,7 +7,6 @@ pub struct Config {
 }
 
 impl Config {
-
     pub fn init() -> Config {
         let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
         let jwt_secret = std::env::var("JWT_SECRET_KEY").expect("JWT_SECRET_KEY must be set");
@@ -20,5 +19,4 @@ impl Config {
             port: 8000,
         }
     }
-    
 }

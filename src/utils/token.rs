@@ -4,14 +4,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::error::{ErrorMessage, HttpError};
 
-#[derive(Debug, Serialize, Deserialize,)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct TokenClaims {
     pub sub: String,
     pub iat: usize,
     pub exp: usize,
 }
 
-pub fn create_token (
+pub fn create_token(
     user_id: &str,
     secret: &[u8],
     expires_in_seconds: i64,
@@ -30,24 +30,23 @@ pub fn create_token (
     };
 
     encode(
-        &Header::default(), 
-        &claims, 
+        &Header::default(),
+        &claims,
         &EncodingKey::from_secret(secret),
     )
 }
 
-pub fn decode_token<T: Into<String>>(
-    token: T,
-    secret: &[u8],
-) -> Result<String, HttpError> {
+pub fn decode_token<T: Into<String>>(token: T, secret: &[u8]) -> Result<String, HttpError> {
     let decode = decode::<TokenClaims>(
-        &token.into(), 
-        &DecodingKey::from_secret(secret), 
+        &token.into(),
+        &DecodingKey::from_secret(secret),
         &Validation::new(jsonwebtoken::Algorithm::HS256),
     );
 
     match decode {
         Ok(token) => Ok(token.claims.sub),
-        Err(_) => Err(HttpError::unauthorized(ErrorMessage::InvalidToken.to_string()))
+        Err(_) => Err(HttpError::unauthorized(
+            ErrorMessage::InvalidToken.to_string(),
+        )),
     }
 }

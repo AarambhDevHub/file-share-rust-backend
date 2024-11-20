@@ -1,5 +1,5 @@
-use core::str;
 use chrono::{DateTime, Utc};
+use core::str;
 use serde::{Deserialize, Serialize};
 use validator::{Validate, ValidationError};
 
@@ -9,20 +9,19 @@ use crate::models::{ReceiveFileDetails, SentFileDetails, User};
 pub struct RegisterUserDto {
     #[validate(length(min = 1, message = "Name is required"))]
     pub name: String,
+
     #[validate(
         length(min = 1, message = "Email is required"),
         email(message = "Email is invalid")
     )]
     pub email: String,
-    #[validate(
-        length(min = 1, message = "Password is required"),
-        length(min = 6, message = "Password must be at least 6 characters")
-    )]
+
+    #[validate(length(min = 6, message = "Password must be at least 6 characters"))]
     pub password: String,
 
     #[validate(
         length(min = 1, message = "Confirm Password is required"),
-        must_match(other = "password", message="passwords do not match")
+        must_match(other = "password", message = "Passwords do not match")
     )]
     #[serde(rename = "passwordConfirm")]
     pub password_confirm: String,
@@ -30,12 +29,12 @@ pub struct RegisterUserDto {
 
 #[derive(Validate, Debug, Default, Clone, Serialize, Deserialize)]
 pub struct LoginUserDto {
-    #[validate(length(min = 1, message = "Email is required"), email(message = "Email is invalid"))]
-    pub email: String,
     #[validate(
-        length(min = 1, message = "Password is required"),
-        length(min = 6, message = "Password must be at least 6 characters")
+        length(min = 1, message = "Email is required"),
+        email(message = "Email is invalid")
     )]
+    pub email: String,
+    #[validate(length(min = 6, message = "Password must be at least 6 characters"))]
     pub password: String,
 }
 
@@ -102,10 +101,11 @@ impl UserSendFileDto {
     }
 
     pub fn filter_send_user_files(user: &[SentFileDetails]) -> Vec<UserSendFileDto> {
-        user.iter().map(UserSendFileDto::filter_send_user_file).collect()
+        user.iter()
+            .map(UserSendFileDto::filter_send_user_file)
+            .collect()
     }
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserSendFileListResponseDto {
@@ -135,10 +135,11 @@ impl UserReceiveFileDto {
     }
 
     pub fn filter_receive_user_files(user: &[ReceiveFileDetails]) -> Vec<UserReceiveFileDto> {
-        user.iter().map(UserReceiveFileDto::filter_receive_user_file).collect()
+        user.iter()
+            .map(UserReceiveFileDto::filter_receive_user_file)
+            .collect()
     }
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserReceiveFileListResponseDto {
@@ -167,23 +168,19 @@ pub struct NameUpdateDto {
 
 #[derive(Debug, Validate, Default, Clone, Serialize, Deserialize)]
 pub struct UserPasswordUpdateDto {
-    #[validate(
-        length(min = 1, message = "New password is required."),
-        length(min = 6, message = "new password must be at least 6 characters")
-    )]
+    #[validate(length(min = 6, message = "new password must be at least 6 characters"))]
     pub new_password: String,
 
     #[validate(
-        length(min = 1, message = "New password confirm is required."),
-        length(min = 6, message = "new password confirm must be at least 6 characters"),
-        must_match(other = "new_password", message="new passwords do not match")
+        length(
+            min = 6,
+            message = "new password confirm must be at least 6 characters"
+        ),
+        must_match(other = "new_password", message = "new passwords do not match")
     )]
     pub new_password_confirm: String,
 
-    #[validate(
-        length(min = 1, message = "Old password is required."),
-        length(min = 6, message = "Old password must be at least 6 characters")
-    )]
+    #[validate(length(min = 6, message = "Old password must be at least 6 characters"))]
     pub old_password: String,
 }
 
@@ -221,13 +218,10 @@ pub struct FileUploadDtos {
     #[validate(email(message = "Invalid email format"))]
     pub recipient_email: String,
 
-    #[validate(
-        length(min = 1, message = "New password is required."),
-        length(min = 6, message = "New password must be at least 6 characters")
-    )]
+    #[validate(length(min = 6, message = "New password must be at least 6 characters"))]
     pub password: String,
 
-    #[validate(custom = "validate_expiration_date")]
+    #[validate(custom(function = "validate_expiration_date"))]
     pub expiration_date: String,
 }
 
@@ -238,10 +232,10 @@ fn validate_expiration_date(expiration_date: &str) -> Result<(), ValidationError
         return Err(error);
     }
 
-    let parsed_date = DateTime::parse_from_rfc3339(expiration_date)
-    .map_err(|_| {
+    let parsed_date = DateTime::parse_from_rfc3339(expiration_date).map_err(|_| {
         let mut error = ValidationError::new("invalid_date_format");
-        error.message = Some("Invalid date format. Expected format is YYYY-MM-DDTHH:MM:SS.ssssssZ.".into());
+        error.message =
+            Some("Invalid date format. Expected format is YYYY-MM-DDTHH:MM:SS.ssssssZ.".into());
         error
     })?;
 
@@ -261,9 +255,6 @@ pub struct RetrieveFileDto {
     #[validate(length(min = 1, message = "Shared id is required"))]
     pub shared_id: String,
 
-    #[validate(
-        length(min = 1, message = "Password is required."),
-        length(min = 6, message = "Password must be at least 6 characters")
-    )]
+    #[validate(length(min = 6, message = "Password must be at least 6 characters"))]
     pub password: String,
 }

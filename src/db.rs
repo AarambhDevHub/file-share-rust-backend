@@ -68,28 +68,23 @@ pub trait UserExt {
         user_id: Uuid,
     ) -> Result<Option<SharedLink>, sqlx::Error>;
 
-    async fn get_file(
-        &self,
-        file_id: Uuid,
-    ) -> Result<Option<File>, sqlx::Error>;
+    async fn get_file(&self, file_id: Uuid) -> Result<Option<File>, sqlx::Error>;
 
     async fn get_sent_files(
         &self,
         user_id: Uuid,
         page: u32,
-        limit: usize
+        limit: usize,
     ) -> Result<(Vec<SentFileDetails>, i64), sqlx::Error>;
 
     async fn get_receive_files(
         &self,
         user_id: Uuid,
         page: u32,
-        limit: usize
+        limit: usize,
     ) -> Result<(Vec<ReceiveFileDetails>, i64), sqlx::Error>;
 
-    async fn delete_expired_files(
-        &self
-    ) -> Result<(), sqlx::Error>;
+    async fn delete_expired_files(&self) -> Result<(), sqlx::Error>;
 }
 
 #[async_trait]
@@ -299,10 +294,7 @@ impl UserExt for DBClient {
         Ok(shared_link)
     }
 
-    async fn get_file(
-        &self,
-        file_id: Uuid,
-    ) -> Result<Option<File>, sqlx::Error> {
+    async fn get_file(&self, file_id: Uuid) -> Result<Option<File>, sqlx::Error> {
         let file = sqlx::query_as!(
             File,
             r#"
@@ -321,7 +313,7 @@ impl UserExt for DBClient {
         &self,
         user_id: Uuid,
         page: u32,
-        limit: usize
+        limit: usize,
     ) -> Result<(Vec<SentFileDetails>, i64), sqlx::Error> {
         let offset = (page - 1) * limit as u32;
 
@@ -375,7 +367,7 @@ impl UserExt for DBClient {
         &self,
         user_id: Uuid,
         page: u32,
-        limit: usize
+        limit: usize,
     ) -> Result<(Vec<ReceiveFileDetails>, i64), sqlx::Error> {
         let offset = (page - 1) * limit as u32;
 
@@ -425,18 +417,15 @@ impl UserExt for DBClient {
         Ok((files, total_count))
     }
 
-    async fn delete_expired_files(
-        &self
-    ) -> Result<(), sqlx::Error> {
-        
+    async fn delete_expired_files(&self) -> Result<(), sqlx::Error> {
         let expired_shared_links: Vec<Uuid> = sqlx::query_scalar!(
             r#"
             SELECT sl.id
             FROM shared_links sl
             WHERE sl.expiration_date < NOW()
             "#,
-        ).
-        fetch_all(&self.pool)
+        )
+        .fetch_all(&self.pool)
         .await?;
 
         if expired_shared_links.is_empty() {
@@ -482,6 +471,5 @@ impl UserExt for DBClient {
         println!("Successfully deleted expired files and their shared links.");
 
         Ok(())
-
     }
 }

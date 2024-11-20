@@ -4,26 +4,26 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-argon2 = "0.5.1"
-async-trait = "0.1.72"
-chrono = { version = "0.4.26", features = ["serde"] }
-dotenv = "0.15.0"
-jsonwebtoken = "9.2.0"
-serde = { version = "1.0.183", features = ["derive"] }
-serde_json = "1.0.104"
-sqlx = { version = "0.8.1", features = ["runtime-async-std-native-tls", "postgres", "chrono", "uuid"] }
-uuid = { version = "1.4.1", features = ["serde", "v4"] }
-validator = { version = "0.16.1", features = ["derive"] }
-axum = { version = "0.7.6", features = ["multipart"]}
-axum-extra = { version = "0.9.3", features = ["cookie"]}
-tokio = { version = "1.39.3", features = ["full"] }
-tokio-cron-scheduler = "0.13.0"
-tower = "0.5.0"
-time = "0.3.20"
-tower-http = { version = "0.5.2", features = ["cors","trace"] }
-tracing-subscriber = { version = "0.3.18"}
-aes = "0.7"
-block-modes = "0.8"
-rsa = "0.9"
-rand = "0.8"
+aes = "0.8"
+argon2 = "0.5.3"
+async-trait = "0.1.83"
+axum = { version = "0.7.9", features = ["multipart"] }
+axum-extra = { version = "0.9.6", features = ["cookie"] }
 base64 = "0.22.1"
+cbc = "0.1.2"
+chrono = { version = "0.4.38", features = ["serde"] }
+dotenv = "0.15.0"
+jsonwebtoken = "9.3.0"
+rand = "0.8"
+rsa = "0.9"
+serde = { version = "1.0.215", features = ["derive"] }
+serde_json = "1.0.133"
+sqlx = { version = "0.8.2", features = ["runtime-async-std-native-tls", "postgres", "chrono", "uuid"] }
+time = "0.3.36"
+tokio = { version = "1.41.1", features = ["full"] }
+tokio-cron-scheduler = "0.13.0"
+tower = "0.5.1"
+tower-http = { version = "0.6.2", features = ["cors","trace"] }
+tracing-subscriber = { version = "0.3.18" }
+uuid = { version = "1.11.0", features = ["serde", "v4"] }
+validator = { version = "0.19.0", features = ["derive"] }
